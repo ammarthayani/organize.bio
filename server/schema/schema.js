@@ -49,10 +49,10 @@ const FolderType = new GraphQLObjectType({
 	fields : () => ({
 		id        : { type: GraphQLID },
 		name      : { type: GraphQLString },
-		creator : {
-			type : UserType,
-			resolve (parent, args){
-				return User.findById(parent.creatorId)
+		creator   : {
+			type    : UserType,
+			resolve (parent, args) {
+				return User.findById(parent.creatorId);
 			}
 		},
 		templates : {
@@ -99,6 +99,12 @@ const FormType = new GraphQLObjectType({
 			type    : TemplateType,
 			resolve (parent, args) {
 				return Template.findById(parent.templateId);
+			}
+		},
+		answers  : {
+			type    : GraphQLList(AnswerType),
+			resolve (parent, args) {
+				return Answer.find({ formId: parent.id });
 			}
 		}
 	})
@@ -200,7 +206,7 @@ const RootQuery = new GraphQLObjectType({
 				return Template.find();
 			}
 		},
-		folders            : {
+		folders           : {
 			type    : new GraphQLList(FolderType),
 			resolve (parent, args) {
 				return Folder.find();
@@ -296,18 +302,32 @@ const Mutation = new GraphQLObjectType({
 				return template.save();
 			}
 		},
-		addFolder : {
-			type: FolderType,
-			args:{
-				name: {type: GraphQLString},
-				creatorId: {type: GraphQLID},
+		addFolder      : {
+			type    : FolderType,
+			args    : {
+				name      : { type: GraphQLString },
+				creatorId : { type: GraphQLID }
 			},
-			resolve(parent, args) {
+			resolve (parent, args) {
 				let folder = new Folder({
-					name : args.name,
-					creatorId: args.creatorId
-				})
-				return folder.save()
+					name      : args.name,
+					creatorId : args.creatorId
+				});
+				return folder.save();
+			}
+		},
+		addForm        : {
+			type    : FormType,
+			args    : {
+				name       : { type: GraphQLString },
+				templateId : { type: GraphQLID }
+			},
+			resolve (parent, args) {
+				let form = new Form({
+					name       : args.name,
+					templateId : args.templateId
+				});
+				return form.save();
 			}
 		}
 	}
