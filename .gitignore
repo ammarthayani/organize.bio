@@ -1,4 +1,4 @@
 frontend-win32-x64
-*.env
+.env
 node_modules
 dist
