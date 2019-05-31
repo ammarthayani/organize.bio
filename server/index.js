@@ -1,10 +1,12 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const schema = require('./schema/schema');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
+const {ApolloServer, gql} = require('apollo-server-express');
+const typeDefs = require('./schema/typeDefs')
+const resolvers = require('./schema/resolvers')
 
 //Initializes app unsing express
 const app = express();
@@ -13,17 +15,17 @@ const app = express();
 app.use(cors());
 
 
+
+// A map of functions which return data for the schema.
+
+
 //Sets endpoint for /graphql route and passes in schema and passes in secret
-app.use(
-	'/graphql',
-	graphqlHTTP({
-		schema   : schema,
-		graphiql : true,
-		context  : {
-			SECRET : process.env.SECRET
-		}
-	})
-);
+const server = new ApolloServer({
+	typeDefs,
+	resolvers
+})
+
+server.applyMiddleware({app})
 
 //Connects to the MongoDB database using mongoose
 mongoose.connect(process.env.DB_CONN, { useNewUrlParser: true });
@@ -34,6 +36,6 @@ mongoose.connection.on('open', () => {
 });
 
 //starts app
-app.listen((PORT = process.env.PORT), () => {
-	console.log('now listening for requests on port ' + PORT);
-});
+app.listen({ port: 4000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+)
