@@ -138,7 +138,7 @@ const resolvers = {
 			})
 			return user.save()
 		},
-		login = async (_,{Username, Password}, {SECRET}) => {
+		login: async (_,{Username, Password}, {SECRET}) => {
 			const user = await User.findOne({ username: Username });
 				if (!user) {
 					throw new Error('No user with that username');
