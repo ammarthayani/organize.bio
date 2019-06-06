@@ -14,6 +14,8 @@ const typeDefs = gql`
 		email: String
 		password: String
 		institution: Institution
+		createdFolders: [Folder]
+		createdTemplates: [Template]
 	}
 
 	type Folder {
@@ -29,6 +31,7 @@ const typeDefs = gql`
 		folder: Folder
 		forms: [Form]
 		questions: [Question]
+		creator: User
 	}
 
 	type Form {
@@ -52,31 +55,29 @@ const typeDefs = gql`
 	}
 
 	type Query {
+		me(token: String): [User]
+		institution(InstitutionId: ID!): Institution
+		institutions: [Institution]
 		users: [User]
 		usersByInstitution(InstitutionId: ID!): [User]
-		institution: Institution
-		institutions: [Institution]
 		templates: [Template]
-		templatesByInstitution(InstitutionId: ID!): [Template]
-		templatesByCreator(CreatorID: ID!): [Template]
+		templatesByCreator(CreatorId: ID!): [Template]
 		folders: [Folder]
-		foldersByInsitution(InstitutionId: ID!): [Folder]
-		foldersByCreator(CreatorID: ID!): [Folder]
+		foldersByCreator(CreatorId: ID!): [Folder]
 		forms(TemplateId: ID!): [Form]
 		questions(TemplateId: ID!): [Question]
 		answers(FormId: ID!): [Answer]
-		me(token: String): [User]
 	}
 
 	type Mutation {
-		addInstitution(name: String!): Institution
-		addUser(name: String, username: String, email: String, password: String, institutionId: ID): User
-		login(username: String, password: String): String
-		addTemplate(name: String, CreatorId: ID, FolderId: ID): Template
-		addFolder(name: String, CreatorId: ID): Folder
-		addForm(name: String, TemplateId: ID): Form
-		addQuestion(name: String, TemplateId: ID): Question
-		addAnswer(name: String, FormId: ID, QuestionId: ID): Answer
+		addInstitution(Name: String!): Institution
+		addUser(Name: String, Username: String, Email: String, Password: String, institutionId: ID): User
+		login(Username: String, Password: String): String
+		addTemplate(Name: String, CreatorId: ID, FolderId: ID): Template
+		addFolder(Name: String, CreatorId: ID): Folder
+		addForm(Name: String, TemplateId: ID): Form
+		addQuestion(Name: String, TemplateId: ID): Question
+		addAnswer(Name: String, FormId: ID, QuestionId: ID): Answer
 	}
 `;
 
