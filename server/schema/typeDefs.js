@@ -55,15 +55,17 @@ const typeDefs = gql`
 	}
 
 	type Query {
-		me(token: String): [User]
+		me(token: String): User
 		institution(InstitutionId: ID!): Institution
 		institutions: [Institution]
 		users: [User]
 		usersByInstitution(InstitutionId: ID!): [User]
+		template(TemplateId:ID):Template
 		templates: [Template]
 		templatesByCreator(CreatorId: ID!): [Template]
 		folders: [Folder]
 		foldersByCreator(CreatorId: ID!): [Folder]
+		folder(FolderId: ID): Folder
 		forms(TemplateId: ID!): [Form]
 		questions(TemplateId: ID!): [Question]
 		answers(FormId: ID!): [Answer]
@@ -71,13 +73,17 @@ const typeDefs = gql`
 
 	type Mutation {
 		addInstitution(Name: String!): Institution
-		addUser(Name: String, Username: String, Email: String, Password: String, institutionId: ID): User
+		addUser(Name: String, Username: String, Email: String, Password: String, InstitutionId: ID): User
 		login(Username: String, Password: String): String
 		addTemplate(Name: String, CreatorId: ID, FolderId: ID): Template
 		addFolder(Name: String, CreatorId: ID): Folder
 		addForm(Name: String, TemplateId: ID): Form
 		addQuestion(Name: String, TemplateId: ID): Question
 		addAnswer(Name: String, FormId: ID, QuestionId: ID): Answer
+	}
+
+	type Subscriptions {
+		folderAdded(CreatorId: String): Folder
 	}
 `;
 

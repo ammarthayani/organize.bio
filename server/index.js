@@ -12,7 +12,6 @@ const resolvers = require('./schema/resolvers');
 const app = express();
 
 // Then pass them to cors:
-app.use(cors());
 
 // A map of functions which return data for the schema.
 
@@ -28,7 +27,7 @@ const server = new ApolloServer({
 server.applyMiddleware({ app });
 
 //Connects to the MongoDB database using mongoose
-mongoose.connect(process.env.DB_CONN, { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost:27017/dtabse", { useNewUrlParser: true });
 
 //When the connection is established this runs
 mongoose.connection.on('open', () => {

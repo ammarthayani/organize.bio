@@ -1,4 +1,5 @@
 import {Institution} from './institution'
+import { Folder } from './folder';
 
 export class User {
     id: string;
@@ -6,4 +7,5 @@ export class User {
     username: string;
     email: string;
     institution: Institution;
+    createdFolders: Folder[]
   }

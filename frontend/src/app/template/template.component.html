@@ -1,11 +1,11 @@
 <div id="side-nav">
   <div>
     <i id="create-icon" class="material-icons">add</i>
-    <p id="create" class="nav-text" (click)="initLoginModal()">Create Project</p>
+    <p id="create" class="nav-text">Create Form</p>
   </div>
   <div>
     <i id="members-icon" class="material-icons">people</i>
-    <p id="members" class="nav-text">Members</p>
+    <p id="members" class="nav-text">Add Questions</p>
   </div>
 
 
@@ -17,11 +17,11 @@
       <i class="material-icons">close</i>
     </div>
   </form>
-  <p id="folder">Folders</p>
-  <div fxLayoutAlign="space-evenly" id="folderRow">
+  <p id="folder">{{template.name}}</p>
+  <div fxLayout="row wrap" fxLayoutGap="32px" fxLayoutAlign="flex-start" id="folderRow">
     <div class="folders" *ngFor="let folder of folders">
-      <a class="waves-effect waves-light btn col s12 m4 l2" [routerLink]="['/folder', folder.id]"><i
-          class="material-icons left">folder</i>{{folder.name}}</a>
+      <a  fxFlex="0 1 calc(33.3% - 32px)" class="waves-effect waves-light btn col s12 m4 l2" [routerLink]="['/form', form.id]"><i
+          class="material-icons left">folder</i>{{forms.name}}</a>
     </div>
   </div>
 </div>

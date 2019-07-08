@@ -4,9 +4,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import {GraphQLModule} from './apollo.config'
-
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatDialogModule} from '@angular/material';
+import { CommonModule } from '@angular/common';  
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,8 +21,16 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { InstitutionComponent } from './institution/institution.component';
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
+import {DataService} from './services/data.service';
+import {ModalService} from './services/modal.service';
+import {DomService} from './services/dom.service';
 import {FlashMessagesModule} from 'angular2-flash-messages'
 import { AuthGuard } from './guards/auth.guard';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { TemplateDialogComponent } from './template-dialog/template-dialog.component';
+import { FolderComponent } from './folder/folder.component';
+import { FolderDialogComponent } from './folder-dialog/folder-dialog.component';
+import { TemplateComponent } from './template/template.component';
 
 @NgModule({
 	declarations : [
@@ -32,6 +42,10 @@ import { AuthGuard } from './guards/auth.guard';
 		ProfileComponent,
 		DashboardComponent,
 		InstitutionComponent,
+		TemplateDialogComponent,
+		FolderComponent,
+		FolderDialogComponent,
+		TemplateComponent,
 	],
 	imports      : [
 		BrowserModule,
@@ -42,14 +56,24 @@ import { AuthGuard } from './guards/auth.guard';
 		GraphQLModule,
     FormsModule,
 		FlashMessagesModule.forRoot(),
+		FlexLayoutModule,
+		BrowserAnimationsModule,
+		CommonModule,
+		MatDialogModule,
+		ReactiveFormsModule,
+
 	],
 	providers    : [
 		ValidateService,
 		AuthService,
-		AuthGuard
+		AuthGuard,
+		DataService,
+		ModalService,
+		DomService
 	],
 	bootstrap    : [
 		AppComponent,
 	],
+	entryComponents:[TemplateDialogComponent, FolderDialogComponent]
 })
 export class AppModule {}

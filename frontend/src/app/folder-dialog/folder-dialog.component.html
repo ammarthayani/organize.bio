@@ -1,0 +1,16 @@
+<h2>Create Template</h2>
+<p>Enter the name of your template</p>
+<form id="login-form" class="form-signin">
+    <div class="form-group">
+        <div class= "row" id="name">
+         <div class="input-field col s12">
+           <input  type="text"[(ngModel)]="name" name="name">
+           <label for="name">Name</label>
+         </div>
+         </div>
+       </div>
+</form>
+
+  <button (click) = close()>Cancel</button>
+ 
+  <button (click) = save()>Save</button>

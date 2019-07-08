@@ -10,39 +10,63 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  email: String;
+  username: String;
   password: String;
-  user: Object
+  email: String;
+  name:String;
+  institutionId: String;
+  user: Object;
+  signin: Boolean;
   constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService, private flashMessage: FlashMessagesService) {
   }
 
   ngOnInit() {
-    const user = {
-      email: "ammarthayani@gmail.com",
-      password: "Ammar786"
-    };
-
-    this.authService.authenticateUser(user)
+    this.signin = true
     
+  };
+
+  onSignupSubmit(){
+        const user = {
+      username:this.username,
+      password:this.password,
+      email:this.email,
+      institutionId: this.institutionId,
+      name: this.name
+    }
+    console.log(user)
+    this.authService.registerUser(user).subscribe((response) => {
+      console.log(response.data.name)
+      this.router.navigate(['login'])
+    })
   }
 
   onLoginSubmit(){
     const user = {
-      email: this.email,
+      username: this.username,
       password: this.password
     };
 
+  
 
 
-    this.authService.authenticateUser(user);
+    this.authService.authenticateUser(user).subscribe((response) => {
+      // 5
+      this.authService.authToken = response.data.login;
       if(this.authService.authToken == null){
-        this.flashMessage.show("Incorrect login", {cssClass: "alert-danger", timeour: 5000})
+        this.flashMessage.show("Incorrect login", {cssClass: "alert-danger", timeout: 5000})
+        console.log('incorrect login');
+        
         this.router.navigate(['login'])
       } else {
         this.authService.storeUserData(this.authService.authToken)
-        this.flashMessage.show("You are now logged in", {cssClass: "alert-success", timeour: 3000})
+        this.flashMessage.show("You are now logged in", {cssClass: "alert-success", timeout: 3000})
+        console.log('login');
+        
+        this.router.navigate(['dashboard'])
         this.authService.loggedIn = true
       }
+    });;
+      
          }
   }
 

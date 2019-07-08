@@ -10,6 +10,7 @@ const Template = require('../models/template');
 const Form = require('../models/form');
 const Question = require('../models/question');
 const Answer = require('../models/answer');
+const Graph = require('../models/graph')
 
 const resolvers = {
 	User        : {
@@ -29,10 +30,10 @@ const resolvers = {
 		}
 	},
 	Folder      : {
-		creator () {
+		creator (parent) {
 			return User.findById(parent.creatorId);
 		},
-		templates () {
+		templates (parent) {
 			return Template.find({ folderId: parent.id });
 		}
 	},
@@ -45,26 +46,29 @@ const resolvers = {
 		},
 		creator (parent) {
 			return User.findById(parent.creatorId);
+		},
+		questions (parent){
+			return Question.find({templateId: parent.id})
 		}
 	},
 	Form        : {
-		template () {
+		template (parent) {
 			return Template.findById(parent.templateId);
 		},
-		answers () {
+		answers (parent) {
 			return Answer.find({ formId: parent.id });
 		}
 	},
 	Question    : {
-		template () {
+		template (parent) {
 			return Template.findById(parent.templateId);
 		}
 	},
 	Answer      : {
-		question () {
+		question (parent) {
 			return Question.findById(parent.questionId);
 		},
-		form () {
+		form (parent) {
 			return Form.findById(parent.formId);
 		}
 	},
@@ -74,7 +78,8 @@ const resolvers = {
 
 			if (token) {
 				try {
-					const { user } = await jwt.verify(args.token, SECRET);
+					const { user } = await jwt.verify(token, SECRET);
+					console.log(user.id);
 					currentUser = User.findById(user.id);
 					console.log(currentUser);
 					return currentUser;
@@ -99,6 +104,9 @@ const resolvers = {
 		usersByInstitution (_, { InstitutionId }) {
 			return User.find({ institutionId: InstitutionId });
 		},
+		template(_,{TemplateId}){
+			return Template.findById(TemplateId)
+		},
 		templates () {
 			return Template.find();
 		},
@@ -110,6 +118,10 @@ const resolvers = {
 		},
 		foldersByCreator (_, { CreatorId }) {
 			return Folder.find({ creatorId: CreatorId });
+		},
+		folder(parent, {FolderId}){
+			console.log(FolderId)
+			return Folder.findById(FolderId)
 		},
 		forms (_, { TemplateId }) {
 			return Form.find({ templateId: TemplateId });
@@ -129,22 +141,26 @@ const resolvers = {
 			return institution.save()
 			
 		},
-		addUser(_, {Name, Username, Email, Password}){
+		addUser: async(_, {Name, Username, Email, Password, InstitutionId}) => {
 			let user = new User({
 				name:Name,
 				username:Username,
 				email: Email,
-				password:Password
+				password:Password,
+				institutionId:InstitutionId
 			})
-			return user.save()
+			user.password = await bcrypt.hash(Password, 12);
+				return user.save();
 		},
-		login: async (_,{Username, Password}, {SECRET}) => {
+		login: async (parent,{Username, Password}, {SECRET}) => {
+			console.log(Username)
 			const user = await User.findOne({ username: Username });
+			console.log(user)
 				if (!user) {
 					throw new Error('No user with that username');
 				}
 
-				const valid = await bcrypt.compare(password, user.password);
+				const valid = await bcrypt.compare(Password, user.password);
 				if (!valid) {
 					throw new Error('Incorrect password');
 				}
@@ -201,7 +217,8 @@ const resolvers = {
 			})
 			return answer.save();
 
-}}
+}
+},
 };
 
 module.exports = resolvers;
