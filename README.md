@@ -1,1 +1,1 @@
-I'll eventually add instructions.
+This was an old project that I abandoned a while ago. This was my first time using a javascript framework and Typescript. This was also my first full stack application. For anyone who sees this, I probably won't finish this but I hopefully will be posting some of my other projects.
